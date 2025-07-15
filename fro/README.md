@@ -1,12 +1,52 @@
-# React + Vite
+# Campus Assistant Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the React frontend for the Campus Assistant Chatbot project, built using Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 18 with functional components and hooks
+- Chat interface for interacting with the backend chatbot API
+- Additional UI components for canteen menu, department locations, and quick actions
+- Built with Vite for fast development and optimized builds
 
-## Expanding the ESLint configuration
+## Setup and Development
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development Server
+
+```bash
+npm run dev
+```
+
+This will start the frontend development server at http://localhost:3000.
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+The production-ready files will be generated in the `dist` folder.
+
+## Linting
+
+ESLint is configured for this project. To run linting:
+
+```bash
+npm run lint
+```
+
+## Notes
+
+- This frontend communicates with the backend API running at http://localhost:5000.
+- Ensure the backend server is running before starting the frontend to enable full functionality.
