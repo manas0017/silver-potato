@@ -1,152 +1,118 @@
-CDP Chatbot - Complete Documentation
-Overview
-The CDP Chatbot is a web-based application designed to provide users with answers to queries related to Customer Data Platforms (CDP). It consists of a frontend (React) and a backend (Node.js with Express & Lunr.js) that powers the search functionality. The chatbot processes user queries, searches a pre-scraped dataset of CDP-related documentation, and returns the most relevant response.
-Features
-AI-powered Search: Uses Lunr.js to provide fast and efficient text search.
-CDP-focused Responses: Filters out irrelevant questions and ensures queries stay within the CDP domain.
-User-friendly UI: A clean and interactive chat interface with a modern design.
-Real-time Typing Indicator: Displays a typing effect when fetching responses.
-Keyboard Support: Pressing Enter sends the message.
-Mobile & Desktop Support: Responsive design for smooth experience across devices.
+# Campus Assistant Chatbot - Complete Documentation
 
-1. Tech Stack
-Frontend (React)
-React.js
-Axios (for API requests)
-CSS (for styling, no Tailwind)
-Backend (Node.js & Express)
-Node.js with Express
-Lunr.js (for full-text search indexing)
-Cheerio & Puppeteer (for web scraping)
-Cors & Body-parser
+## Overview
+The Campus Assistant Chatbot is a web-based application designed to assist users with queries related to campus facilities and services. It consists of a frontend (React with Vite) and a backend (Node.js with Express & Dialogflow) that powers the chatbot functionality. The chatbot processes user messages, interacts with Dialogflow for natural language understanding, and returns relevant responses. It also logs chat interactions to Firestore.
 
-2. Installation & Setup
-Prerequisites
-Ensure you have the following installed:
-Node.js (v18+)
-npm or yarn
-Clone the Repository
-git clone https://github.com/your-repo/cdp-chatbot.git
-cd cdp-chatbot
+## Features
+- AI-powered Chatbot: Uses Google Dialogflow for natural language understanding.
+- Chat Logging: Saves chat logs to Firestore for analysis.
+- User-friendly UI: Clean and interactive chat interface with additional campus-related features.
+- Additional Features: Canteen menu display, department locations map, and quick action buttons.
+- Responsive Design: Works smoothly on both mobile and desktop devices.
 
-Backend Setup
-Navigate to the backend folder:
- cd backend
+## Tech Stack
 
+### Frontend
+- React.js
+- Vite (build tool)
+- CSS (inline styles)
 
-Install dependencies:
- npm install
+### Backend
+- Node.js with Express
+- Google Dialogflow API
+- Firestore (Firebase) for chat logs
+- Body-parser, CORS middleware
 
+## Installation & Setup
 
-Start the server:
- npm start
- The backend should be running at http://localhost:5000.
-Frontend Setup
-Navigate to the frontend folder:
- cd frontend
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm or yarn
 
+### Clone the Repository
+```bash
+git clone https://github.com/your-repo/campus-assistant-chatbot.git
+cd campus-assistant-chatbot
+```
 
-Install dependencies:
- npm install
+### Backend Setup
+```bash
+cd bac
+npm install
+npm start
+```
+The backend server will run at http://localhost:5000.
 
+### Frontend Setup
+```bash
+cd fro
+npm install
+npm run dev
+```
+The frontend will run at http://localhost:3000.
 
-Start the frontend:
- npm start
- The frontend should be running at http://localhost:3000.
+## Backend API Endpoints
 
-3. Backend (API Endpoints)
-1. Search API
-Endpoint:
-POST /search
+### POST /chat
+Send a user message to the chatbot and receive a reply.
 
-Request Body:
+**Request Body:**
+```json
 {
-  "question": "How does Segment's audience creation process compare to Lytics?"
+  "message": "Hello, how can I find the library?"
 }
+```
 
-Response:
+**Response:**
+```json
 {
-  "answer": "Segment allows audience creation based on real-time events...",
-  "link": "https://segment.com/docs"
+  "reply": "The library is located in the main building, open from 8 AM to 8 PM."
 }
+```
 
-Note: The backend search functionality has been updated to use Dialogflow for AI-powered natural language understanding and response generation. Ensure you have configured Dialogflow credentials and updated the project ID in the backend search.js file.
+### POST /search
+Send a question to search documents (if applicable).
 
-4. Frontend (React Components)
-1. ChatBot.js
-Handles user interaction, message sending, and rendering bot responses.
-import { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import "./App.css";
-
-function ChatBot() {
-  const [messages, setMessages] = useState([]);
-  const [question, setQuestion] = useState("");
-  const chatRef = useRef(null);
-
-  useEffect(() => {
-    chatRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  const handleSend = async () => {
-    if (!question.trim()) return;
-    const newMessage = { type: "user", text: question };
-    setMessages((prev) => [...prev, newMessage]);
-    setQuestion("");
-    try {
-      const res = await axios.post("http://localhost:5000/search", { question });
-      setMessages((prev) => [...prev, { type: "bot", text: res.data.answer, link: res.data.link }]);
-    } catch (err) {
-      setMessages((prev) => [...prev, { type: "bot", text: "Something went wrong. Try again!" }]);
-    }
-  };
-
-  return (
-    <div className="chat-container">
-      <div className="chat-box">
-        {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.type}`}>
-            {msg.text}
-            {msg.link && <a href={msg.link} target="_blank" rel="noopener noreferrer">Read more</a>}
-          </div>
-        ))}
-        <div ref={chatRef}></div>
-      </div>
-      <div className="input-box">
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask something..."
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <button onClick={handleSend}>➤</button>
-      </div>
-    </div>
-  );
+**Request Body:**
+```json
+{
+  "question": "What are the bus schedules?"
 }
-export default ChatBot;
+```
 
+**Response:**
+```json
+{
+  // Search results object
+}
+```
 
-5. Deployment Guide
-Frontend Deployment
-You can deploy the React frontend using Vercel or Netlify:
+## Frontend Usage
+
+The frontend provides a chat interface where users can type messages and receive responses from the chatbot. Additional UI features include:
+
+- Display of today's canteen menu.
+- Department locations map toggle.
+- Quick action buttons for common queries like library hours, bus schedule, events, and help.
+
+## Deployment Guide
+
+### Frontend Deployment
+Build the frontend for production:
+```bash
+cd fro
 npm run build
+```
+Deploy the contents of the `dist` folder using platforms like Vercel or Netlify.
 
-Then follow the steps to deploy the build/ folder.
-Backend Deployment
-For deploying the backend, use Render.com or Vercel:
-npm install -g vercel
-vercel
+### Backend Deployment
+Deploy the backend using platforms like Render.com or Vercel. Ensure environment variables and CORS policies are configured for production.
 
-Ensure the CORS policy is updated for production.
+## Future Enhancements
+- Voice input for chatbot interaction.
+- User authentication and chat history saving.
+- Integration with more campus services.
+- Smarter AI responses using advanced NLP models.
 
-6. Future Enhancements
-AI-powered Search: Replace Lunr.js with OpenAI API for smarter results.
-More CDP Providers: Expand the dataset with more CDP vendors.
-Voice Input: Allow users to ask questions using voice commands.
-Authentication: Add user login to save chat history.
-
-7. Conclusion
-This chatbot provides a streamlined way to search CDP-related content and get accurate answers. With a simple interface, fast search, and clean UI, it delivers an efficient experience for users exploring Customer Data Platforms. 🚀
-
+## Conclusion
+The Campus Assistant Chatbot offers a streamlined way for campus users to get quick answers and access useful information through an interactive chat interface. It combines AI-powered backend services with a responsive frontend for an efficient user experience. 🚀
