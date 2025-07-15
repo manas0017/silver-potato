@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -12,7 +14,7 @@ app.use(cors());
 
 const projectId = 'ahhhhh-lpbn'; // Updated with your actual Dialogflow project ID
 const sessionClient = new dialogflow.SessionsClient({
-  keyFilename: './ahhhhh-lpbn-310f299b575c.json', // Updated to new service account JSON file
+  credentials: JSON.parse(process.env.SERVICE_ACCOUNT)
 });
 
 // Enhanced error logging for Dialogflow API calls

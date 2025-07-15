@@ -1,10 +1,33 @@
 import React, { useState } from 'react';
 
 const App = () => {
-  const [showMenu, setShowMenu] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [selectedCanteen, setSelectedCanteen] = useState(null);
+
+  const canteens = [
+    { name: 'Main Canteen', icon: '🏠', menu: ['Rice & Dal', 'Paneer Butter Masala', 'Chapati', 'Buttermilk'] },
+    { name: 'North Mess', icon: '🍛', menu: ['Rajma Rice', 'Mixed Veg Curry', 'Roti', 'Curd'] },
+    { name: 'South Mess', icon: '🍱', menu: ['Sambhar & Rice', 'Vegetable Kurma', 'Parotta', 'Payasam'] },
+    { name: 'Juice Center', icon: '🥤', menu: ['Orange Juice', 'Mango Shake', 'Banana Shake'] },
+    { name: 'Non-Veg Corner', icon: '🍗', menu: ['Chicken Curry', 'Egg Masala', 'Fried Rice'] },
+    { name: 'Bakery', icon: '🥐', menu: ['Puffs', 'Donuts', 'Chocolate Cake'] },
+    { name: 'Evening Snacks', icon: '🌇', menu: ['Samosa', 'Pav Bhaji', 'Tea', 'Coffee'] },
+    { name: 'Fast Food Hub', icon: '🍔', menu: ['Burger', 'Fries', 'Noodles'] },
+    { name: 'Healthy Bites', icon: '🥗', menu: ['Sprout Salad', 'Boiled Eggs', 'Green Tea'] }
+  ];
+
+const departments = [
+    { name: 'KJ COLLEGE GATE', icon: '🧪', map: 'https://maps.app.goo.gl/fEXZyDV9BexkNCdf8' },
+    { name: 'TRINITY Jr COLLEGE', icon: '⚙', map: 'https://g.co/kgs/TqKjAT5' },
+    { name: 'TRINITY COLLEGE OF ACADEMY', icon: '💻', map: 'https://g.co/kgs/E7dPoGQ' },
+    { name: 'TRINITY COLLEGE OF ENGINEERING AND RESEARCH', icon: '📡', map: 'https://g.co/kgs/E7dPoGQ' },
+    { name: 'TRINITY COLLEGE OF ENGINEERING AND MANAGEMENT', icon: '📐', map: 'https://g.co/kgs/tFxuumF' },
+    { name: 'KJ EDUCATIONAL INSTITUTE', icon: '🔌', map: 'https://g.co/kgs/zksRRaq' },
+    { name: 'TRINITY COLLEGE OF PHARMACY', icon: '📊', map: 'https://g.co/kgs/Uhq5h3B' },
+    { name: 'TRINITY POLYTECHNIC PUNE', icon: '🏢', map: 'https://g.co/kgs/oMDyBVn' }
+  ];
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -35,15 +58,11 @@ const App = () => {
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          🎓 <span style={{ marginLeft: 10, fontWeight: 'bold' }}>Campus Assistant</span>
-        </div>
+        <div style={styles.headerLeft}>🎓 <span style={{ marginLeft: 10, fontWeight: 'bold' }}>Campus Assistant</span></div>
         <div style={styles.headerRight}>Your friendly campus helper</div>
       </header>
 
-      {/* Chat Section */}
       <section style={styles.card}>
         <h2 style={styles.cardTitle}>🟣 Chat with Assistant</h2>
         <div style={{ ...styles.chatBox, flexDirection: 'column', overflowY: 'auto' }}>
@@ -75,25 +94,32 @@ const App = () => {
         </div>
       </section>
 
-      {/* Canteen Menu */}
+      {/* Canteen Dropdown */}
       <section style={{ ...styles.card, backgroundColor: '#f1faf1' }}>
         <div style={styles.sectionRow}>
           <h3>🍽️ Today's Canteen Menu</h3>
-          <button style={styles.button} onClick={() => setShowMenu(!showMenu)}>
-            {showMenu ? 'Hide Menu' : 'Show Menu'}
-          </button>
+          <select
+            style={{ padding: 8, borderRadius: 6, border: '1px solid #ccc' }}
+            value={selectedCanteen || ''}
+            onChange={(e) => setSelectedCanteen(e.target.value)}
+          >
+            <option value="" disabled>Select a canteen</option>
+            {canteens.map((canteen, index) => (
+              <option key={index} value={index}>{canteen.name}</option>
+            ))}
+          </select>
         </div>
-        {showMenu && (
+        {selectedCanteen !== null && (
           <div style={styles.expandedBox}>
-            <p>• Rice & Dal</p>
-            <p>• Paneer Butter Masala</p>
-            <p>• Chapati</p>
-            <p>• Buttermilk</p>
+            <h4>{canteens[selectedCanteen].icon} {canteens[selectedCanteen].name}</h4>
+            {canteens[selectedCanteen].menu.map((item, i) => (
+              <p key={i}>• {item}</p>
+            ))}
           </div>
         )}
       </section>
 
-      {/* Map Section */}
+      {/* Department Locations Grid */}
       <section style={{ ...styles.card, backgroundColor: '#fff7e6' }}>
         <div style={styles.sectionRow}>
           <h3>📍 Department Locations</h3>
@@ -101,17 +127,30 @@ const App = () => {
             style={{ ...styles.button, ...styles.mapButton }}
             onClick={() => setShowMap(!showMap)}
           >
-            {showMap ? 'Hide Map' : 'Show Map'}
+            {showMap ? 'Hide Locations' : 'Show Locations'}
           </button>
         </div>
+
         {showMap && (
-          <div style={styles.expandedBox}>
-            <p>[Google Map iframe or Map component goes here]</p>
+          <div style={styles.gridBox}>
+            {departments.map((dept, index) => (
+              <div key={index} style={styles.mapCard}>
+                <h4>{dept.icon} {dept.name}</h4>
+                <iframe
+                  title={dept.name}
+                  src={dept.map}
+                  width="100%"
+                  height="150"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </div>
         )}
       </section>
 
-      {/* Quick Actions */}
       <section style={styles.quickActions}>
         <h3 style={{ marginBottom: 15 }}>Quick Actions</h3>
         <div style={styles.grid}>
@@ -215,7 +254,7 @@ const styles = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
     gap: 15
   },
   quickCard: {
@@ -226,6 +265,18 @@ const styles = {
     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
     fontSize: 14,
     fontWeight: '500'
+  },
+  gridBox: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: 20,
+    marginTop: 20
+  },
+  mapCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+    padding: 10
   }
 };
 
