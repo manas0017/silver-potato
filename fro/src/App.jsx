@@ -36,7 +36,7 @@ const departments = [
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+      const res = await fetch(`https://silver-potato-cjcs.onrender.com/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
